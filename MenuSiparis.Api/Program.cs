@@ -1,4 +1,9 @@
 
+using MenuSiparis.Repository;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Reflection;
+
 namespace MenuSiparis.Api
 {
     public class Program
@@ -14,6 +19,13 @@ namespace MenuSiparis.Api
             // Swagger/OpenAPI yapılandırması
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<MenüSiparisDbContext>(x =>
+            {
+                x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), option =>
+                {
+                    option.MigrationsAssembly(Assembly.GetAssembly(typeof(MenüSiparisDbContext)).GetName().Name);
+                });
+            });
 
             var app = builder.Build();
 

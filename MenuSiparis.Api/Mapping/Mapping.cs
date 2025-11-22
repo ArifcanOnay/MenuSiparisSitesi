@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MenuSiparis.Core.Entities;
 using MenuSiparis.Dto.AboutDto;
 using MenuSiparis.Dto.BookingDto;
 using MenuSiparis.Dto.CategoryDto;
@@ -8,7 +9,7 @@ using MenuSiparis.Dto.FeatureDto;
 using MenuSiparis.Dto.ProductDto;
 using MenuSiparis.Dto.SocialMediaDto;
 using MenuSiparis.Dto.TestimonialDto;
-using SignalR.Entitiy.Layer.Entities;
+
 
 namespace SignalRApi.Mapping
 {
