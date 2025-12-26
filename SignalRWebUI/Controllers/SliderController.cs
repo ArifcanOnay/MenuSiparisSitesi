@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SignalRWebUI.Dtos.FeatureDtos;
 using SignalRWebUI.Dtos.SliderDtos;
@@ -6,6 +7,7 @@ using System.Text;
 
 namespace SignalRWebUI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class SliderController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;

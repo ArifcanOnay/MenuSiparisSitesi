@@ -1,16 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SignalRWebUI.Dtos.BookingDtos;
+using SignalR.BusinessLayer.Abstract;
 using System.Text;
 
 namespace SignalRWebUI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class BookingController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        public BookingController(IHttpClientFactory httpClientFactory)
+        private readonly IEmailService _emailService;
+        
+        public BookingController(IHttpClientFactory httpClientFactory, IEmailService emailService)
         {
             _httpClientFactory = httpClientFactory;
+            _emailService = emailService;
         }
         public async Task<IActionResult> Index()
         {
@@ -81,16 +87,102 @@ namespace SignalRWebUI.Controllers
         }
         public async Task<IActionResult> BookingStatusApproved(int id)
         {
-			var client = _httpClientFactory.CreateClient();
-			await client.GetAsync($"https://localhost:7186/api/Booking/BookingStatusApproved/{id}");
+            var client = _httpClientFactory.CreateClient();
+            
+            // Rezervasyon bilgilerini al
+            var getResponse = await client.GetAsync($"https://localhost:7186/api/Booking/{id}");
+            if (getResponse.IsSuccessStatusCode)
+            {
+                var jsonData = await getResponse.Content.ReadAsStringAsync();
+                var booking = JsonConvert.DeserializeObject<ResultBookingDto>(jsonData);
+                
+                // Durumu güncelle
+                await client.GetAsync($"https://localhost:7186/api/Booking/BookingStatusApproved/{id}");
+                
+                // Mail gönder
+                var subject = "🎉 Rezervasyonunuz Onaylandı!";
+                var body = $@"
+                    <html>
+                    <body style='font-family: Arial, sans-serif;'>
+                        <div style='max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;'>
+                            <div style='background-color: #28a745; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;'>
+                                <h1>✅ Rezervasyonunuz Onaylandı!</h1>
+                            </div>
+                            <div style='background-color: white; padding: 30px; border-radius: 0 0 10px 10px;'>
+                                <p>Sayın <strong>{booking.Name}</strong>,</p>
+                                <p>Rezervasyonunuz başarıyla onaylanmıştır.</p>
+                                
+                                <div style='background-color: #e9ecef; padding: 15px; border-radius: 5px; margin: 20px 0;'>
+                                    <h3 style='color: #28a745; margin-top: 0;'>Rezervasyon Detayları:</h3>
+                                    <p><strong>Ad Soyad:</strong> {booking.Name}</p>
+                                    <p><strong>Telefon:</strong> {booking.Phone}</p>
+                                    <p><strong>Kişi Sayısı:</strong> {booking.PersonCount}</p>
+                                    <p><strong>Tarih:</strong> {booking.Date:dd.MM.yyyy HH:mm}</p>
+                                </div>
+                                
+                                <p>Sizi aramızda görmekten mutluluk duyacağız!</p>
+                                <p style='color: #6c757d; font-size: 12px; margin-top: 30px;'>
+                                    Herhangi bir sorunuz varsa bizimle iletişime geçebilirsiniz.
+                                </p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>";
+                
+                await _emailService.SendEmailAsync(booking.Mail, subject, body);
+            }
+            
             return RedirectToAction("Index");
-		}
+        }
 
-		public async Task<IActionResult> BookingStatusCancelled(int id)
-		{
-			var client = _httpClientFactory.CreateClient();
-			await client.GetAsync($"https://localhost:7186/api/Booking/BookingStatusCancelled/{id}");
-			return RedirectToAction("Index");
-		}
+        public async Task<IActionResult> BookingStatusCancelled(int id)
+        {
+            var client = _httpClientFactory.CreateClient();
+            
+            // Rezervasyon bilgilerini al
+            var getResponse = await client.GetAsync($"https://localhost:7186/api/Booking/{id}");
+            if (getResponse.IsSuccessStatusCode)
+            {
+                var jsonData = await getResponse.Content.ReadAsStringAsync();
+                var booking = JsonConvert.DeserializeObject<ResultBookingDto>(jsonData);
+                
+                // Durumu güncelle
+                await client.GetAsync($"https://localhost:7186/api/Booking/BookingStatusCancelled/{id}");
+                
+                // Mail gönder
+                var subject = "❌ Rezervasyonunuz İptal Edildi";
+                var body = $@"
+                    <html>
+                    <body style='font-family: Arial, sans-serif;'>
+                        <div style='max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;'>
+                            <div style='background-color: #dc3545; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;'>
+                                <h1>❌ Rezervasyon İptali</h1>
+                            </div>
+                            <div style='background-color: white; padding: 30px; border-radius: 0 0 10px 10px;'>
+                                <p>Sayın <strong>{booking.Name}</strong>,</p>
+                                <p>Maalesef rezervasyonunuz iptal edilmiştir.</p>
+                                
+                                <div style='background-color: #f8d7da; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #dc3545;'>
+                                    <h3 style='color: #dc3545; margin-top: 0;'>İptal Edilen Rezervasyon:</h3>
+                                    <p><strong>Ad Soyad:</strong> {booking.Name}</p>
+                                    <p><strong>Telefon:</strong> {booking.Phone}</p>
+                                    <p><strong>Kişi Sayısı:</strong> {booking.PersonCount}</p>
+                                    <p><strong>Tarih:</strong> {booking.Date:dd.MM.yyyy HH:mm}</p>
+                                </div>
+                                
+                                <p>Yeni bir rezervasyon oluşturmak için web sitemizi ziyaret edebilirsiniz.</p>
+                                <p style='color: #6c757d; font-size: 12px; margin-top: 30px;'>
+                                    Sorularınız için bizimle iletişime geçebilirsiniz.
+                                </p>
+                            </div>
+                        </div>
+                    </body>
+                    </html>";
+                
+                await _emailService.SendEmailAsync(booking.Mail, subject, body);
+            }
+            
+            return RedirectToAction("Index");
+        }
 	}
 }

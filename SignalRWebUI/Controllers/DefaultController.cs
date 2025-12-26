@@ -18,8 +18,11 @@ namespace SignalRWebUI.Controllers
 		{
 			_httpClientFactory = httpClientFactory;
 		}
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(int id = 0)
 		{
+			// Masa ID'sini ViewBag'e koy
+			ViewBag.MenuTableId = id;
+			
 			//var client = _httpClientFactory.CreateClient();
 			//var responseMessage = await client.GetAsync("https://localhost:7186/api/Contact");
 			//var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -32,8 +35,16 @@ namespace SignalRWebUI.Controllers
 			response.EnsureSuccessStatusCode();
 			string responseBody = await response.Content.ReadAsStringAsync();
 			JArray item = JArray.Parse(responseBody);
-			string value = item[0]["location"].ToString();
-			ViewBag.location = value;
+			
+			if (item != null && item.Count > 0)
+			{
+				string value = item[0]["location"].ToString();
+				ViewBag.location = value;
+			}
+			else
+			{
+				ViewBag.location = "";
+			}
 			return View();
 		}
 

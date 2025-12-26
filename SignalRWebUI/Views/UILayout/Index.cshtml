@@ -20,6 +20,8 @@
     @await Component.InvokeAsync("_UILayoutFooterComponentPartial")
 
     @await Component.InvokeAsync("_UILayoutScriptComponentPartial")
+    
+    @RenderSection("Scripts", required: false)
 
     <!-- footer section -->
     <!-- jQery -->

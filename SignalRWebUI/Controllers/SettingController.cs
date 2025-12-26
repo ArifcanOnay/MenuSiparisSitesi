@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using SignalR.EntityLayer.Entities;
 using SignalRWebUI.Dtos.IdentityDtos;
 
@@ -14,7 +15,9 @@ namespace SignalRWebUI.Controllers
             _userManager = userManager;
         }
 
+        // Admin için (mevcut)
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var values = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -25,7 +28,9 @@ namespace SignalRWebUI.Controllers
             userEditDto.Mail = values.Email;
             return View(userEditDto);
         }
+        
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(UserEditDto userEditDto)
         {
             if (userEditDto.Password == userEditDto.ConfirmPassword)
@@ -40,6 +45,70 @@ namespace SignalRWebUI.Controllers
                 return RedirectToAction("Index", "Category");
             }
             return View();
+        }
+
+        // Kullanıcılar için (YENİ)
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> UserProfile()
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            UserEditDto userEditDto = new UserEditDto
+            {
+                Name = user.Name,
+                Surname = user.Surname,
+                Username = user.UserName,
+                Mail = user.Email
+            };
+            
+            return View(userEditDto);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UserProfile(UserEditDto userEditDto)
+        {
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            // Şifre değiştirme kontrolü
+            if (!string.IsNullOrEmpty(userEditDto.Password))
+            {
+                if (userEditDto.Password != userEditDto.ConfirmPassword)
+                {
+                    TempData["ErrorMessage"] = "Şifreler eşleşmiyor!";
+                    return View(userEditDto);
+                }
+                user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, userEditDto.Password);
+            }
+
+            // Bilgileri güncelle
+            user.Name = userEditDto.Name;
+            user.Surname = userEditDto.Surname;
+            user.Email = userEditDto.Mail;
+            
+            var result = await _userManager.UpdateAsync(user);
+            
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Bilgileriniz başarıyla güncellendi!";
+                return RedirectToAction("UserProfile");
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Güncelleme sırasında bir hata oluştu!";
+            }
+
+            return View(userEditDto);
         }
     }
 }

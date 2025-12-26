@@ -17,7 +17,7 @@ namespace SignalRWebUI.Controllers
         {
             MimeMessage mimeMessage = new MimeMessage();
 
-            MailboxAddress mailboxAddressFrom = new MailboxAddress("SignalR Rezervasyon", "projekursapi@gmail.com");
+            MailboxAddress mailboxAddressFrom = new MailboxAddress("SignalR Restoran", "arifonay.853@gmail.com");
             mimeMessage.From.Add(mailboxAddressFrom);
 
             MailboxAddress mailboxAddressTo = new MailboxAddress("User", createMailDto.ReceiverMail);
@@ -31,7 +31,7 @@ namespace SignalRWebUI.Controllers
 
             SmtpClient client = new SmtpClient();
             client.Connect("smtp.gmail.com", 587, false);
-            client.Authenticate("projekursapi@gmail.com", "itcs zbby vbzk uugm");
+            client.Authenticate("arifonay.853@gmail.com", "cejefceedltfxnmc");
 
             client.Send(mimeMessage);
             client.Disconnect(true);

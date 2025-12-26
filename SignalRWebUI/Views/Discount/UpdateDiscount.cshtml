@@ -10,7 +10,7 @@
         <h4 class="page-title">İndirimli Ürün İşlemleri</h4>
         <div class="row">
             <div class="col-md-12">
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Yeni İndirimli Ürün Girişi</div>
@@ -30,8 +30,15 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="ImageUrl">Ürün Görselini Giriniz</label>
-                                <input type="text" class="form-control" asp-for="ImageUrl" id="ImageUrl">
+                                <label for="ImageUrl">Mevcut Görsel URL</label>
+                                <input type="text" class="form-control" asp-for="ImageUrl" id="ImageUrl" readonly>
+                                <small class="form-text text-muted">Değiştirmek için aşağıdan yeni görsel yükleyin</small>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="imagefile">Yeni Ürün Görseli Yükle (Opsiyonel)</label>
+                                <input type="file" class="form-control" name="imageFile" id="imagefile" accept="image/*">
                             </div>
                         </div>
                         <div class="card-body">

@@ -6,17 +6,54 @@
 <div class="content">
     <div class="container-fluid">
         <h4 class="page-title">QR Kod İşlemleri</h4>
+        
         <div class="row">
             <div class="col-md-12">
-                <form method="post" asp-action="Index" asp-controller="QRCode">
-                    <input type="text" name="value" />
-                    <input type="submit" value="QR Kod Oluştur" class="btn btn-warning" />
-                    <br /><br />
-                    @if (ViewBag.QrCodeImage != null)
-                    {
-                        <img src="@ViewBag.QrCodeImage" alt="" style="width:400px;height:400px" />
-                    }
-                </form>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Masa QR Kodu Oluştur</h4>
+                        <p class="card-category">Müşterilerinizin masadan sipariş verebilmesi için QR kod oluşturun</p>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" asp-action="Index" asp-controller="QRCode">
+                            <div class="form-group">
+                                <label>Masa Numarası veya URL Giriniz:</label>
+                                <input type="text" name="value" class="form-control" placeholder="Örnek: https://localhost:7092/Menu/Index/1 veya Masa 1" />
+                                <small class="form-text text-muted">
+                                    💡 Örnek URL: https://localhost:7092/Menu/Index/1 (Masa 1 için menü)
+                                </small>
+                            </div>
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fa fa-qrcode"></i> QR Kod Oluştur
+                            </button>
+                        </form>
+                        
+                        @if (ViewBag.QrCodeImage != null)
+                        {
+                            <hr />
+                            <div class="text-center">
+                                <h5>✅ QR Kod Başarıyla Oluşturuldu!</h5>
+                                <img src="@ViewBag.QrCodeImage" alt="QR Code" style="width:400px;height:400px;border:3px solid #ffbe33;border-radius:15px;padding:10px;" />
+                                <p class="mt-3">Bu QR kodu yazdırıp masanıza yerleştirebilirsiniz.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h4 class="card-title">📱 Nasıl Kullanılır?</h4>
+                    </div>
+                    <div class="card-body">
+                        <ol style="font-size:16px;line-height:2;">
+                            <li><strong>Masa URL'i Oluştur:</strong> Örnek: https://localhost:7092/Menu/Index/1 (1 = Masa ID)</li>
+                            <li><strong>QR Kod Oluştur:</strong> Yukarıdaki forma URL'i yapıştır ve "QR Kod Oluştur" butonuna bas</li>
+                            <li><strong>Yazdır:</strong> Oluşan QR kodu sağ tık → "Resmi Kaydet" → Yazdır</li>
+                            <li><strong>Masaya Yerleştir:</strong> QR kodu lamine edip masaya koy</li>
+                            <li><strong>Müşteri Tarar:</strong> Müşteri telefonu ile QR'ı tarayınca direkt menü açılır ve sipariş verebilir!</li>
+                        </ol>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,25 +1,39 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 using SignalR.DataAccessLayer.Concrete;
 using SignalR.EntityLayer.Entities;
+using SignalR.BusinessLayer.Abstract;
+using SignalR.BusinessLayer.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var requireAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-
 // Add services to the container.
-builder.Services.AddDbContext<SignalRContext>();
-builder.Services.AddIdentity<AppUser, AppRole>().AddEntityFrameworkStores<SignalRContext>();
-builder.Services.AddHttpClient();
-builder.Services.AddControllersWithViews(opt =>
+builder.Services.AddDbContext<SignalRContext>(options =>
 {
-    opt.Filters.Add(new AuthorizeFilter(requireAuthorizePolicy));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddIdentity<AppUser, AppRole>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 1;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+}).AddEntityFrameworkStores<SignalRContext>();
+
+// Email Service kaydet
+builder.Services.AddScoped<IEmailService, EmailManager>();
+
+builder.Services.AddHttpClient();
+builder.Services.AddControllersWithViews();
 
 builder.Services.ConfigureApplicationCookie(opts =>
 {
     opts.LoginPath = "/Login/Index";
+    opts.AccessDeniedPath = "/Login/Index";
 });
 
 
@@ -51,6 +65,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Login}/{action=Index}/{id?}");
 
 app.Run();

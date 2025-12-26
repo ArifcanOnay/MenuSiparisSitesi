@@ -10,9 +10,11 @@ namespace SignalRWebUI.Controllers
 	public class LoginController : Controller
 	{
 		private readonly SignInManager<AppUser> _signInManager;
-		public LoginController(SignInManager<AppUser> signInManager)
+		private readonly UserManager<AppUser> _userManager;
+		public LoginController(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager)
 		{
 			_signInManager = signInManager;
+			_userManager = userManager;
 		}
 
 		[HttpGet]
@@ -27,7 +29,19 @@ namespace SignalRWebUI.Controllers
 			var result = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, false, false);
 			if (result.Succeeded)
 			{
-				return RedirectToAction("Index", "Category");
+				var user = await _userManager.FindByNameAsync(loginDto.Username);
+				if (user != null)
+				{
+					var roles = await _userManager.GetRolesAsync(user);
+					
+					// Eğer Admin rolü varsa admin paneline yönlendir
+					if (roles.Contains("Admin"))
+					{
+						return RedirectToAction("Index", "Category");
+					}
+				}
+				// Normal kullanıcı - masa seçim sayfasına yönlendir
+				return RedirectToAction("CustomerTableList", "CustomerTable");
 			}
 			return View();
 		}

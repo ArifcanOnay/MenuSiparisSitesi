@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SignalRWebUI.Dtos.BasketDtos;
 using SignalRWebUI.Dtos.ProductDtos;
@@ -6,6 +7,7 @@ using System.Text;
 
 namespace SignalRWebUI.Controllers
 {
+    [AllowAnonymous]
     public class MenuController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -13,8 +15,14 @@ namespace SignalRWebUI.Controllers
         {
             _httpClientFactory = httpClientFactory;
         }
-        public async Task<IActionResult> Index(int id)
+        public async Task<IActionResult> Index(int id = 1)
         {
+            // Test için: id 0 ise default 1 yap
+            if (id == 0)
+            {
+                id = 1;
+            }
+            
             ViewBag.v = id; // Burada MenuTableId değerini ayarlıyoruz
                             // TempData["x"] = id; // Eğer bunu kullanıyorsanız
 
@@ -53,7 +61,9 @@ namespace SignalRWebUI.Controllers
 
             if (responseMessage.IsSuccessStatusCode)
             {
-                return RedirectToAction("Index");
+                // Başarı mesajı ile birlikte aynı sayfaya dön
+                TempData["SuccessMessage"] = "✅ Ürün sepete eklendi!";
+                return RedirectToAction("Index", new { id = menuTableId });
             }
 
             return Json(createBasketDto);

@@ -65,6 +65,8 @@ namespace SignalR.BusinessLayer.Container
 
             services.AddScoped<IMessageService, MessageManager>();
             services.AddScoped<IMessageDal, EfMessageDal>();
+
+            services.AddScoped<IEmailService, EmailManager>();
         }
     }
 }

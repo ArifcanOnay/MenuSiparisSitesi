@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using SignalR.BusinessLayer.Abstract;
 using SignalR.BusinessLayer.Concrete;
 using SignalR.BusinessLayer.Container;
@@ -24,7 +25,10 @@ builder.Services.AddCors(opt =>
 });
 builder.Services.AddSignalR();
 
-builder.Services.AddDbContext<SignalRContext>();
+builder.Services.AddDbContext<SignalRContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services.ContainerDependencies();

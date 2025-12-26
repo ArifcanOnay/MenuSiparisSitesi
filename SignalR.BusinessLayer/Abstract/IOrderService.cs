@@ -13,5 +13,8 @@ namespace SignalR.BusinessLayer.Abstract
         int TActiveOrderCount();
         decimal TLastOrderPrice();
         decimal TTodayTotalPrice();
+        void TUpdateOrderStatus(int orderId, string status);
+        List<Order> TGetOrdersByTableNumber(string tableNumber);
+        Order TGetLastOrderByTableNumber(string tableNumber);
     }
 }

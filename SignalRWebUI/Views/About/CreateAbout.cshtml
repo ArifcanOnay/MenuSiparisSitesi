@@ -10,7 +10,7 @@
         <h4 class="page-title">Ana Sayfa Hakkımızda İşlemleri</h4>
         <div class="row">
             <div class="col-md-12">
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Yeni Hakkımızda Yazı Girişi</div>
@@ -18,23 +18,34 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="Title">Başlığı Giriniz</label>
-                                <input type="text" class="form-control" asp-for="Title" id="Title">
+                                <input type="text" class="form-control" asp-for="Title" id="Title" required>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="ImageUrl">Görselin Url'ini Giriniz</label>
-                                <input type="text" class="form-control" asp-for="ImageUrl" id="ImageUrl">
+                                <label for="ImageUrl">Görsel Url'ini Giriniz (Manuel)</label>
+                                <input type="text" class="form-control" asp-for="ImageUrl" id="ImageUrl" placeholder="/images/resimadi.png">
+                                <small class="form-text text-muted">Örnek: /images/HakkimizdaBolumu.png</small>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="imagefile">VEYA Bilgisayardan Görsel Yükle</label>
+                                <input type="file" class="form-control-file border p-2" name="imageFile" id="imagefile" accept="image/*">
+                                <small class="form-text text-success">Bilgisayarınızdan dosya seçebilirsiniz</small>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="Description">Açıklamayı Giriniz</label>
-                                <textarea rows="5" class="form-control" asp-for="Description" id="Description"></textarea>
+                                <textarea rows="5" class="form-control" asp-for="Description" id="Description" required></textarea>
                             </div>
                         </div>
                         <div class="card-action">
-                            <button class="btn btn-primary">Hakkımda Yazısını Ekle</button>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fa fa-save"></i> Hakkımda Yazısını Ekle
+                            </button>
+                            <a href="/About/Index" class="btn btn-danger">İptal</a>
                         </div>
                     </div>
                 </form>

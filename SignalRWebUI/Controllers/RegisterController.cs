@@ -6,6 +6,7 @@ using SignalRWebUI.Dtos.IdentityDtos;
 
 namespace SignalRWebUI.Controllers
 {
+    [AllowAnonymous]
     public class RegisterController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -34,6 +35,10 @@ namespace SignalRWebUI.Controllers
             if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Login");
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
             }
             return View();
         }

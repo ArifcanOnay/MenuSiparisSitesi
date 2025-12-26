@@ -14,8 +14,17 @@ namespace SignalR.DataAccessLayer.Concrete
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=DESKTOP-R7AR1ND;initial Catalog=SignalRDb;integrated Security=true");
+            optionsBuilder.UseSqlServer("Server=CAN\\SQLEXPRESS01;Database=SignalRDb;User Id=sa;Password=1;TrustServerCertificate=True;");
         }
+
+        public SignalRContext(DbContextOptions<SignalRContext> options) : base(options)
+        {
+        }
+
+        public SignalRContext()
+        {
+        }
+
         public DbSet<About> Abouts { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Category> Categories { get; set; }

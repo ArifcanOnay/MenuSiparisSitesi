@@ -24,22 +24,22 @@ namespace SignalR.BusinessLayer.Concrete
 
         public void TAdd(Order entity)
         {
-            throw new NotImplementedException();
+            _orderDal.Add(entity);
         }
 
         public void TDelete(Order entity)
         {
-            throw new NotImplementedException();
+            _orderDal.Delete(entity);
         }
 
         public Order TGetByID(int id)
         {
-            throw new NotImplementedException();
+            return _orderDal.GetByID(id);
         }
 
         public List<Order> TGetListAll()
         {
-            throw new NotImplementedException();
+            return _orderDal.GetListAll();
         }
 
         public decimal TLastOrderPrice()
@@ -59,7 +59,22 @@ namespace SignalR.BusinessLayer.Concrete
 
         public void TUpdate(Order entity)
         {
-            throw new NotImplementedException();
+            _orderDal.Update(entity);
+        }
+
+        public void TUpdateOrderStatus(int orderId, string status)
+        {
+            _orderDal.UpdateOrderStatus(orderId, status);
+        }
+
+        public List<Order> TGetOrdersByTableNumber(string tableNumber)
+        {
+            return _orderDal.GetOrdersByTableNumber(tableNumber);
+        }
+
+        public Order TGetLastOrderByTableNumber(string tableNumber)
+        {
+            return _orderDal.GetLastOrderByTableNumber(tableNumber);
         }
     }
 }

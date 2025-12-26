@@ -13,5 +13,8 @@ namespace SignalR.DataAccessLayer.Abstract
         int ActiveOrderCount();
         decimal LastOrderPrice();
         decimal TodayTotalPrice();
+        void UpdateOrderStatus(int orderId, string status);
+        List<Order> GetOrdersByTableNumber(string tableNumber);
+        Order GetLastOrderByTableNumber(string tableNumber);
     }
 }

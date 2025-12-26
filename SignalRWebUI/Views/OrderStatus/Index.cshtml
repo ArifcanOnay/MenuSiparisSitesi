@@ -1,0 +1,269 @@
+@model SignalRWebUI.Dtos.OrderDtos.ResultOrderDto
+@{
+    ViewData["Title"] = "Sipariş Durumu";
+    Layout = "~/Views/UILayout/Index.cshtml";
+}
+
+<section class="vh-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container h-100">
+        <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg border-0" style="border-radius: 20px;">
+                    <div class="card-body p-5">
+                        <div class="text-center mb-4">
+                            <h2 class="text-primary font-weight-bold">@ViewBag.TableNumber</h2>
+                            <p class="text-muted">Sipariş Takip Sistemi</p>
+                        </div>
+
+                        @if (Model != null)
+                        {
+                            <div class="order-status-container">
+                                <!-- Sipariş Bilgileri -->
+                                <div class="card mb-4" style="background: #f8f9fa; border-radius: 15px;">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p><strong>Sipariş No:</strong> #@Model.OrderID</p>
+                                                <p><strong>Tarih:</strong> @Model.OrderDate.ToString("dd.MM.yyyy HH:mm")</p>
+                                            </div>
+                                            <div class="col-md-6 text-right">
+                                                <p><strong>Toplam Tutar:</strong></p>
+                                                <h3 class="text-success font-weight-bold">@Model.TotalPrice.ToString("C2")</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Durum Göstergesi -->
+                                <div class="status-indicator text-center" id="statusContainer">
+                                    @if (Model.Description == "Sipariş Alındı")
+                                    {
+                                        <div class="status-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                            <i class="fas fa-receipt fa-3x text-white"></i>
+                                        </div>
+                                        <h3 class="mt-4 status-text" style="color: #667eea;">Sipariş Alındı</h3>
+                                        <p class="text-muted">Siparişiniz hazırlanmaya başlayacak</p>
+                                        <div class="spinner-border text-primary mt-3" role="status">
+                                            <span class="sr-only">Bekleniyor...</span>
+                                        </div>
+                                    }
+                                    else if (Model.Description == "Sipariş Hazırlanıyor")
+                                    {
+                                        <div class="status-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                            <i class="fas fa-utensils fa-3x text-white"></i>
+                                        </div>
+                                        <h3 class="mt-4 status-text" style="color: #f5576c;">Sipariş Hazırlanıyor</h3>
+                                        <p class="text-muted">Siparişiniz şu anda hazırlanıyor...</p>
+                                        <div class="progress mt-3" style="height: 25px;">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" 
+                                                 role="progressbar" style="width: 100%">
+                                                <strong>Hazırlanıyor...</strong>
+                                            </div>
+                                        </div>
+                                    }
+                                    else if (Model.Description == "Sipariş Tamamlandı")
+                                    {
+                                        <div class="status-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                            <i class="fas fa-check-circle fa-3x text-white"></i>
+                                        </div>
+                                        <h3 class="mt-4 status-text" style="color: #00f2fe;">Sipariş Tamamlandı!</h3>
+                                        <p class="text-muted">Siparişiniz hazır, afiyet olsun!</p>
+                                        <div class="alert alert-success mt-3" role="alert">
+                                            <i class="fas fa-smile"></i> Siparişiniz masanıza getiriliyor!
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="status-icon" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                                            <i class="fas fa-info-circle fa-3x text-white"></i>
+                                        </div>
+                                        <h3 class="mt-4 status-text">@Model.Description</h3>
+                                    }
+                                </div>
+
+                                <!-- Sipariş Durumu Timeline -->
+                                <div class="timeline mt-5">
+                                    <div class="timeline-item @(Model.Description == "Sipariş Alındı" || Model.Description == "Sipariş Hazırlanıyor" || Model.Description == "Sipariş Tamamlandı" ? "completed" : "")">
+                                        <div class="timeline-icon"><i class="fas fa-check"></i></div>
+                                        <div class="timeline-content">
+                                            <h5>Sipariş Alındı</h5>
+                                            <small>@Model.OrderDate.ToString("HH:mm")</small>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item @(Model.Description == "Sipariş Hazırlanıyor" || Model.Description == "Sipariş Tamamlandı" ? "completed" : "")">
+                                        <div class="timeline-icon"><i class="fas fa-utensils"></i></div>
+                                        <div class="timeline-content">
+                                            <h5>Hazırlanıyor</h5>
+                                            <small>Mutfakta</small>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item @(Model.Description == "Sipariş Tamamlandı" ? "completed" : "")">
+                                        <div class="timeline-icon"><i class="fas fa-check-circle"></i></div>
+                                        <div class="timeline-content">
+                                            <h5>Tamamlandı</h5>
+                                            <small>Servis ediliyor</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <a href="/Menu/Index?id=@ViewBag.MenuTableId" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-arrow-left"></i> Menüye Dön
+                                </a>
+                                <button onclick="location.reload()" class="btn btn-outline-primary btn-lg">
+                                    <i class="fas fa-sync"></i> Yenile
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center">
+                                <i class="fas fa-inbox fa-5x text-muted mb-4"></i>
+                                <h4>Henüz bir siparişiniz bulunmamaktadır.</h4>
+                                <p class="text-muted">Menüden ürün seçerek sipariş verebilirsiniz.</p>
+                                <a href="/Menu/Index?id=@ViewBag.MenuTableId" class="btn btn-primary btn-lg mt-3">
+                                    <i class="fas fa-utensils"></i> Menüye Git
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .status-icon {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    .status-text {
+        font-weight: 700;
+        animation: fadeInUp 0.5s;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .timeline {
+        position: relative;
+        padding: 30px 0;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 3px;
+        height: 100%;
+        background: #e0e0e0;
+    }
+
+    .timeline-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .timeline-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        color: #999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+        transition: all 0.3s;
+    }
+
+    .timeline-item.completed .timeline-icon {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+    }
+
+    .timeline-content {
+        flex: 1;
+        padding: 10px 20px;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content {
+        text-align: right;
+        padding-right: calc(50% + 40px);
+    }
+
+    .timeline-item:nth-child(even) .timeline-content {
+        text-align: left;
+        padding-left: calc(50% + 40px);
+    }
+
+    .btn-lg {
+        padding: 12px 30px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .btn-lg:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+</style>
+
+<!-- SignalR için CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<script>
+    // SignalR bağlantısı kur
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7186/signalrhub")
+        .build();
+
+    // Sipariş durumu güncellemelerini dinle
+    connection.on("ReceiveOrderStatus", function (tableNumber, status) {
+        if (tableNumber === "@ViewBag.TableNumber") {
+            // Sayfayı yenile
+            location.reload();
+        }
+    });
+
+    // Bağlantıyı başlat
+    connection.start().catch(function (err) {
+        console.error(err.toString());
+    });
+
+    // Otomatik yenileme (30 saniyede bir)
+    setInterval(function() {
+        location.reload();
+    }, 30000);
+</script>

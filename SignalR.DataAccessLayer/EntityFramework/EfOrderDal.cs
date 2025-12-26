@@ -39,5 +39,28 @@ namespace SignalR.DataAccessLayer.EntityFramework
             using var context = new SignalRContext();
             return context.Orders.Count();
         }
+
+        public void UpdateOrderStatus(int orderId, string status)
+        {
+            using var context = new SignalRContext();
+            var order = context.Orders.Find(orderId);
+            if (order != null)
+            {
+                order.Description = status;
+                context.SaveChanges();
+            }
+        }
+
+        public List<Order> GetOrdersByTableNumber(string tableNumber)
+        {
+            using var context = new SignalRContext();
+            return context.Orders.Where(x => x.TableNumber == tableNumber).OrderByDescending(x => x.OrderDate).ToList();
+        }
+
+        public Order GetLastOrderByTableNumber(string tableNumber)
+        {
+            using var context = new SignalRContext();
+            return context.Orders.Where(x => x.TableNumber == tableNumber).OrderByDescending(x => x.OrderID).FirstOrDefault();
+        }
     }
 }

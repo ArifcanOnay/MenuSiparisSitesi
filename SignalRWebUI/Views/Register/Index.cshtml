@@ -23,6 +23,17 @@
 			</div>
 			<form class="form-detail" method="post">
 				<h2>Yeni Kullanıcı Kaydı</h2>
+				
+				@if (!ViewData.ModelState.IsValid)
+				{
+					<div style="color: red; margin-bottom: 15px;">
+						@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+						{
+							<p>@error.ErrorMessage</p>
+						}
+					</div>
+				}
+
 				<div class="form-row">
 					<input type="text" id="full-name" asp-for="Name" class="input-text" placeholder="Adınız" required>
 				</div>
@@ -39,7 +50,12 @@
 					<input type="password" id="password" class="input-text" placeholder="Şifreniz" asp-for="Password" required>
 				</div>
 
-				<button class="btn btn-primary">Kayıt Ol</button>
+				<div class="form-row-last">
+					<button type="submit" class="btn btn-primary">Kayıt Ol</button>
+				</div>
+				<div class="form-row-last" style="margin-top: 15px; text-align: center;">
+					<p>Zaten hesabınız var mı? <a href="/Login/Index" style="color: #4CAF50; font-weight: bold;">Giriş Yap</a></p>
+				</div>
 			</form>
 		</div>
 	</div>

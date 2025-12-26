@@ -9,7 +9,7 @@
         <h4 class="page-title">Müşteri Yorum İşlemleri</h4>
         <div class="row">
             <div class="col-md-12">
-                <form method="post">
+                <form method="post" enctype="multipart/form-data">
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title">Yeni Müşteri Yorumu Ekleme Sayfası</div>
@@ -28,8 +28,9 @@
                         </div>
                          <div class="card-body">
                             <div class="form-group">
-                                <label for="ImageUrl">Müşteri Resim Dosya Yolunu Giriniz</label>
-                                <input type="text" class="form-control" asp-for="ImageUrl" id="ImageUrl">
+                                <label for="imagefile">Müşteri Resmi Yükle</label>
+                                <input type="file" class="form-control" name="imageFile" id="imagefile" accept="image/*" required>
+                                <small class="form-text text-muted">Bilgisayarınızdan bir görsel seçin</small>
                             </div>
                         </div>
                         <div class="card-body">
