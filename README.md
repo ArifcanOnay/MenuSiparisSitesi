@@ -275,61 +275,12 @@ MenuSiparisSitesi/
 
 ---
 
-## 🐛 Sık Karşılaşılan Sorunlar
 
-### 1. "Cannot open database" hatası
-
-**Çözüm:** Bağlantı string'ini kontrol edin, SQL Server çalışıyor mu kontrol edin.
-
-```powershell
-# SQL Server durumunu kontrol et
-Get-Service MSSQL*
-```
-
-### 2. "Migration hatası"
-
-**Çözüm:** Migration'ları sıfırlayın:
-
-```powershell
-# Package Manager Console
-Drop-Database
-Update-Database
-```
-
-### 3. "SignalR bağlantı hatası"
-
-**Çözüm:** `SignalRApi` projesinin çalıştığından emin olun. CORS ayarları kontrol edin.
-
-### 4. "QRCoder bulunamadı"
-
-**Çözüm:** NuGet paketlerini restore edin:
-
-```powershell
-dotnet restore
-```
-
----
-
-## 🤝 Katkıda Bulunma
-
-1. Bu repo'yu fork edin
-2. Yeni bir branch oluşturun (`git checkout -b feature/yeniOzellik`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Yeni özellik eklendi'`)
-4. Branch'inizi push edin (`git push origin feature/yeniOzellik`)
-5. Pull Request oluşturun
-
----
-
-## 📝 Lisans
-
-Bu proje eğitim amaçlı geliştirilmiştir.
-
----
 
 ## 👥 Geliştirici Ekibi
 
 - **Arif Can Önay** - [@ArifcanOnay](https://github.com/ArifcanOnay)
-- **Murat Yücedag** - [@MuratYucedag](https://github.com/MuratYucedag)
+  
 
 ---
 
@@ -341,8 +292,4 @@ Sorularınız için:
 
 ---
 
-## 🎓 Eğitim Kaynağı
 
-Bu proje **M&Y Yazılım Eğitim Akademi** Udemy kursunda geliştirilmiştir.
-
-© 2025 SignalR Restoran | Tüm Hakları Saklıdır
