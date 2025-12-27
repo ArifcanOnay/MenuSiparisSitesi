@@ -77,12 +77,7 @@ cd MenuSiparisSitesi
 Update-Database
 ```
 
-#### Yöntem B - SQL Backup ile:
 
-1. Proje sahibinden `SignalRDb.bak` dosyasını alın
-2. **SQL Server Management Studio (SSMS)** açın
-3. Databases → Sağ tık → **Restore Database**
-4. Source: Device → Backup dosyasını seçin → OK
 
 ### 4️⃣ Bağlantı String Ayarı
 
