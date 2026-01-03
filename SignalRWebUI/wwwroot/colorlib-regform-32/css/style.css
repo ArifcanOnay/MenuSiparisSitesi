@@ -4,9 +4,14 @@ body {
 .page-content {
 	width: 100%;
 	margin:  0 auto;
+<<<<<<< HEAD
 	background-image: -moz-linear-gradient( 136deg, rgb(0,0,70) 0%, rgb(28,181,224) 100%);
     background-image: -webkit-linear-gradient( 136deg, rgb(0,0,70) 0%, rgb(28,181,224) 100%);
     background-image: -ms-linear-gradient( 136deg, rgb(0,0,70) 0%, rgb(28,181,224) 100%);
+=======
+	background: linear-gradient(135deg, #f5f0e8 0%, #e8dcc8 50%, #d4c5a9 100%);
+	min-height: 100vh;
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
 	display: flex;
 	display: -webkit-flex;
 	justify-content: center;
@@ -23,25 +28,46 @@ body {
 .form-v6-content  {
 	background: #fff;
 	width: 968px;
+<<<<<<< HEAD
 	border-radius: 8px;
 	-o-border-radius: 8px;
 	-ms-border-radius: 8px;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
 	margin: 180px 0;
+=======
+	border-radius: 20px;
+	-o-border-radius: 20px;
+	-ms-border-radius: 20px;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	margin: 50px 0;
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
 	font-family: 'Nunito', sans-serif;
 	color: #fff;
 	font-weight: 700;
 	position: relative;
 	display: flex;
 	display: -webkit-flex;
+<<<<<<< HEAD
+=======
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+	-webkit-box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+	overflow: hidden;
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
 }
 .form-v6-content .form-left {
 	margin-bottom: -6px;
 }
 .form-v6-content .form-left img {
+<<<<<<< HEAD
 	border-top-left-radius: 8px;
 	border-bottom-left-radius: 8px;
+=======
+	border-top-left-radius: 20px;
+	border-bottom-left-radius: 20px;
+	object-fit: cover;
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
 }
 .form-v6-content .form-detail {
     padding: 30px 40px;
@@ -49,12 +75,21 @@ body {
 	width: 100%;
 }
 .form-v6-content .form-detail h2 {
+<<<<<<< HEAD
 	color: #333;
+=======
+	color: #6b5d4f;
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
 	font-size: 35px;
 	text-align: center;
 	position: relative;
 	padding: 6px 0 0;
 	margin-bottom: 47px;
+<<<<<<< HEAD
+=======
+	font-weight: 800;
+	letter-spacing: -0.5px;
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
 }
 .form-v6-content .form-row {
     width: 100%;
@@ -69,7 +104,11 @@ body {
 	width: 92%;
     padding: 0px 15px 10px 15px;
     border: 2px solid transparent;
+<<<<<<< HEAD
     border-bottom: 2px solid #e5e5e5;
+=======
+    border-bottom: 2px solid #d4c5a9;
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
     appearance: unset;
     -moz-appearance: unset;
     -webkit-appearance: unset;
@@ -83,6 +122,7 @@ body {
     font-family: 'Nunito', sans-serif;
     font-size: 16px;
     font-weight: 700;
+<<<<<<< HEAD
     color: #333;
 }
 .form-v6-content .form-detail .form-row input:focus {
@@ -101,6 +141,29 @@ body {
 	-ms-box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.15);
 	-moz-box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.15);
 	-webkit-box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.15);
+=======
+    color: #6b5d4f;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+.form-v6-content .form-detail .form-row input:focus {
+	border-bottom: 2px solid #a08968;
+	background: #faf8f5;
+}
+.form-v6-content .form-detail .register {
+	background: linear-gradient(135deg, #a08968 0%, #8b7355 100%);
+	border-radius: 12px;
+	-o-border-radius: 12px;
+	-ms-border-radius: 12px;
+	-moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+	width: 160px;
+	box-shadow: 0px 8px 20px 0px rgba(107, 93, 79, 0.3);
+	-o-box-shadow: 0px 8px 20px 0px rgba(107, 93, 79, 0.3);
+	-ms-box-shadow: 0px 8px 20px 0px rgba(107, 93, 79, 0.3);
+	-moz-box-shadow: 0px 8px 20px 0px rgba(107, 93, 79, 0.3);
+	-webkit-box-shadow: 0px 8px 20px 0px rgba(107, 93, 79, 0.3);
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
 	border: none;
 	margin: 11px 0 50px 0px;
 	cursor: pointer;
@@ -108,13 +171,24 @@ body {
 	color: #fff;
 	font-weight: 700;
 	font-size: 18px;
+<<<<<<< HEAD
 }
 .form-v6-content .form-detail .register:hover {
 	background: #e37b27;
+=======
+	transition: all 0.3s ease;
+	transform: translateY(0);
+}
+.form-v6-content .form-detail .register:hover {
+	background: linear-gradient(135deg, #8b7355 0%, #6b5d4f 100%);
+	transform: translateY(-2px);
+	box-shadow: 0px 12px 25px 0px rgba(107, 93, 79, 0.4);
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
 }
 .form-v6-content .form-detail .form-row-last input {
 	padding: 13px;
 }
+<<<<<<< HEAD
 input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
   color: #666;
   font-size: 16px;
@@ -129,6 +203,28 @@ input:-ms-input-placeholder { /* IE 10+ */
 }
 input:-moz-placeholder { /* Firefox 18- */
   color: #666;
+=======
+.form-v6-content .form-detail .form-row-last a {
+	transition: color 0.3s ease;
+}
+.form-v6-content .form-detail .form-row-last a:hover {
+	color: #6b5d4f !important;
+}
+input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #a08968;
+  font-size: 16px;
+}
+input::-moz-placeholder { /* Firefox 19+ */
+  color: #a08968;
+  font-size: 16px;
+}
+input:-ms-input-placeholder { /* IE 10+ */
+  color: #a08968;
+  font-size: 16px;
+}
+input:-moz-placeholder { /* Firefox 18- */
+  color: #a08968;
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
   font-size: 16px;
 }
 
@@ -148,7 +244,11 @@ input:-moz-placeholder { /* Firefox 18- */
 	.form-v6-content .form-left img {
 		width: 100%;
 		border-bottom-left-radius: 0px;
+<<<<<<< HEAD
 	    border-top-right-radius: 8px;
+=======
+	    border-top-right-radius: 20px;
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
 	}
 	.form-v6-content .form-detail {
 		padding: 30px 20px 30px 20px;

@@ -26,10 +26,17 @@
 				
 				@if (!ViewData.ModelState.IsValid)
 				{
+<<<<<<< HEAD
 					<div style="color: red; margin-bottom: 15px;">
 						@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
 						{
 							<p>@error.ErrorMessage</p>
+=======
+					<div style="color: #c85a54; margin-bottom: 15px; background: #fef5f5; padding: 10px; border-radius: 8px; border-left: 3px solid #c85a54;">
+						@foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+						{
+							<p style="margin: 5px 0;">@error.ErrorMessage</p>
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
 						}
 					</div>
 				}
@@ -51,10 +58,17 @@
 				</div>
 
 				<div class="form-row-last">
+<<<<<<< HEAD
 					<button type="submit" class="btn btn-primary">Kayıt Ol</button>
 				</div>
 				<div class="form-row-last" style="margin-top: 15px; text-align: center;">
 					<p>Zaten hesabınız var mı? <a href="/Login/Index" style="color: #4CAF50; font-weight: bold;">Giriş Yap</a></p>
+=======
+					<button type="submit" class="register">Kayıt Ol</button>
+				</div>
+				<div class="form-row-last" style="margin-top: 15px; text-align: center;">
+					<p style="color: #6b5d4f;">Zaten hesabınız var mı? <a href="/Login/Index" style="color: #a08968; font-weight: bold; text-decoration: none;">Giriş Yap</a></p>
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
 				</div>
 			</form>
 		</div>
