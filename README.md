@@ -280,7 +280,11 @@ MenuSiparisSitesi/
 ## 👥 Geliştirici Ekibi
 
 - **Arif Can Önay** - [@ArifcanOnay](https://github.com/ArifcanOnay)
+<<<<<<< HEAD
   
+=======
+- **Ferhan Çıbık** - [@ferhancibik](https://github.com/ferhancibik)
+>>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
 
 ---
 
