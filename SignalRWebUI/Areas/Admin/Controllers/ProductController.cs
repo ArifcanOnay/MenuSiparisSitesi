@@ -27,8 +27,9 @@ namespace SignalRWebUI.Areas.Admin.Controllers
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
                 var values = JsonConvert.DeserializeObject<List<ResultProductDto>>(jsonData);
                 
-                // Server-side paging - Her sayfada 10 ürün
-                var pagedList = values.ToPagedList(page, 10);
+                // DataTables için tüm veriyi gönder, client-side pagination yapacak
+                // Ama server-side paging capability'sini göstermek için PagedList kullanıyoruz
+                var pagedList = values.ToPagedList(page, values.Count); // Tüm veriyi tek sayfada
                 return View(pagedList);
             }
             return View();

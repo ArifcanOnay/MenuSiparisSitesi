@@ -10,6 +10,21 @@
             </p>
         </div>
 
+        <!-- ARAMA KUTUSU -->
+        <div style="text-align: center; margin-top: 30px; margin-bottom: 30px;">
+            <div style="max-width: 600px; margin: 0 auto; position: relative;">
+                <input type="text" 
+                       id="searchBox" 
+                       placeholder="🔍 Ürün ara... (örn: burger, pizza)" 
+                       style="width: 100%; padding: 15px 50px 15px 20px; font-size: 16px; border: 2px solid #ffbe33; border-radius: 30px; outline: none; box-shadow: 0 4px 10px rgba(255, 190, 51, 0.2);">
+                <button onclick="document.getElementById('searchBox').value = ''; applySearchFilter();" 
+                        style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 20px; color: #ffbe33;">
+                    ✕
+                </button>
+            </div>
+            <p id="searchInfo" style="margin-top: 10px; color: #666; font-size: 14px;"></p>
+        </div>
+
         <style>
             .filters_menu {
                 display: flex;
@@ -203,6 +218,17 @@
             </div>
         </div>
         
+        <!-- SAYFALAMA -->
+        <div id="pagination" style="text-align: center; margin-top: 40px; margin-bottom: 40px;">
+            <button id="prevPage" onclick="changePage(-1)" style="background: #ffbe33; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin: 0 5px; cursor: pointer; font-weight: 600;">
+                ← Önceki
+            </button>
+            <span id="pageInfo" style="margin: 0 20px; font-size: 16px; font-weight: 600; color: #222;"></span>
+            <button id="nextPage" onclick="changePage(1)" style="background: #ffbe33; color: white; border: none; padding: 10px 20px; border-radius: 20px; margin: 0 5px; cursor: pointer; font-weight: 600;">
+                Sonraki →
+            </button>
+        </div>
+        
         <!-- Tüm Menüyü Gör Butonu -->
         <div class="btn-box" style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
             <a href="/Menu/Index/" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 12px 40px; border-radius: 30px; color: white; text-decoration: none; font-weight: bold; box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);">
@@ -230,13 +256,21 @@
 </section>
 
 <script>
+    // GLOBAL DEĞİŞKENLER
+    let currentPage = 1;
+    const itemsPerPage = 6;
+    let filteredProducts = [];
+    let allProducts = [];
+    let selectedCategory = 'all';
+    let selectedPrice = 'all';
+    let searchText = '';
+
     function addToBasket(productId, menuTableId) {
         if (!productId || !menuTableId) {
             alert('Hata: Ürün veya masa bilgisi eksik!');
             return false;
         }
         
-        // Form oluştur ve gönder
         var form = document.createElement('form');
         form.method = 'POST';
         form.action = '/Menu/AddBasket';
@@ -259,151 +293,116 @@
         return false;
     }
     
-    // Kategori ve Fiyat Filtreleme (Vanilla JavaScript)
-    document.addEventListener('DOMContentLoaded', function () {
-        console.log("Filtreleme başlatıldı");
+    // SAYFA DEĞİŞTİRME
+    function changePage(direction) {
+        const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
         
-        // Filtreleme durumları
-        let selectedCategory = 'all';
-        let selectedPrice = 'all';
-        
-        // Tüm ürünleri al
-        const allProducts = document.querySelectorAll('.grid > div[data-category]');
-        
-        // İlk yüklemede sadece ilk 6 ürünü göster
-        allProducts.forEach((product, index) => {
-            if (index < 6) {
-                product.style.cssText = 'display: block !important;';
-            } else {
-                product.style.cssText = 'display: none !important;';
-            }
-            console.log("Ürün " + index + " kategorisi:", product.getAttribute('data-category'), "Fiyatı:", product.getAttribute('data-price'));
-        });
-        
-        // Filtreleme fonksiyonu
-        function applyFilters() {
-            console.log("=== FİLTRELEME BAŞLADI ===");
-            console.log("Seçili Kategori:", selectedCategory);
-            console.log("Seçili Fiyat:", selectedPrice);
-            
-            const products = document.querySelectorAll('.grid > div[data-category]');
-            let visibleCount = 0;
-            
-            products.forEach(product => {
-                const productCategory = product.getAttribute('data-category');
-                const productPrice = parseFloat(product.getAttribute('data-price'));
-                
-                console.log("Kontrol edilen ürün - Kategori:", productCategory, "Fiyat:", productPrice);
-                
-                let categoryMatch = false;
-                let priceMatch = false;
-                
-                // Kategori filtresi kontrolü
-                if (selectedCategory === 'all') {
-                    categoryMatch = true;
-                } else {
-                    categoryMatch = (productCategory === selectedCategory);
-                }
-                
-                // Fiyat filtresi kontrolü
-                if (selectedPrice === 'all') {
-                    priceMatch = true;
-                } else if (selectedPrice === 'cheap') {
-                    priceMatch = (productPrice >= 0 && productPrice < 150);
-                    console.log("Cheap kontrolü:", productPrice, "< 150 =", priceMatch);
-                } else if (selectedPrice === 'medium') {
-                    priceMatch = (productPrice >= 150 && productPrice < 300);
-                    console.log("Medium kontrolü:", productPrice, ">= 150 && < 300 =", priceMatch);
-                } else if (selectedPrice === 'expensive') {
-                    priceMatch = (productPrice >= 300);
-                    console.log("Expensive kontrolü:", productPrice, ">= 300 =", priceMatch);
-                }
-                
-                console.log("categoryMatch:", categoryMatch, "priceMatch:", priceMatch);
-                
-                // Her iki filtre de uyuyorsa göster
-                if (categoryMatch && priceMatch) {
-                    // "Tümü" seçiliyse sadece ilk 6 ürünü göster
-                    if (selectedCategory === 'all' && selectedPrice === 'all') {
-                        if (visibleCount < 6) {
-                            product.style.cssText = 'display: block !important;';
-                            visibleCount++;
-                            console.log("Gösteriliyor (ilk 6'dan)");
-                        } else {
-                            product.style.cssText = 'display: none !important;';
-                            console.log("Gizleniyor (6+ ürün)");
-                        }
-                    } else {
-                        // Filtreleme varsa hepsini göster
-                        product.style.cssText = 'display: block !important;';
-                        visibleCount++;
-                        console.log("Gösteriliyor (filtre uyuyor)");
-                    }
-                } else {
-                    product.style.cssText = 'display: none !important;';
-                    console.log("Gizleniyor (filtre uymuyor)");
-                }
-            });
-            
-            console.log("=== TOPLAM GÖRÜNEN ÜRÜN:", visibleCount, "===");
+        if (direction === -1 && currentPage > 1) {
+            currentPage--;
+        } else if (direction === 1 && currentPage < totalPages) {
+            currentPage++;
         }
         
-        // Kategori butonlarına tıklama olayı
-        const filterButtons = document.querySelectorAll('.filters_menu li');
-        console.log("Bulunan kategori butonu sayısı:", filterButtons.length);
+        displayCurrentPage();
+    }
+    
+    // MEVCUT SAYFAYI GÖSTER
+    function displayCurrentPage() {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
         
+        // Tüm ürünleri gizle
+        allProducts.forEach(product => {
+            product.style.display = 'none';
+        });
+        
+        // Sadece ilgili sayfadaki ürünleri göster
+        filteredProducts.slice(startIndex, endIndex).forEach(product => {
+            product.style.display = 'block';
+        });
+        
+        // Sayfalama bilgisini güncelle
+        document.getElementById('pageInfo').textContent = `Sayfa ${currentPage} / ${totalPages || 1} (${filteredProducts.length} ürün)`;
+        
+        // Buton durumlarını güncelle
+        document.getElementById('prevPage').disabled = (currentPage === 1);
+        document.getElementById('nextPage').disabled = (currentPage >= totalPages);
+        
+        // Arama bilgisi
+        if (searchText) {
+            document.getElementById('searchInfo').textContent = `"${searchText}" için ${filteredProducts.length} sonuç bulundu`;
+        } else {
+            document.getElementById('searchInfo').textContent = '';
+        }
+    }
+    
+    // FİLTRELEME FONKSİYONU
+    function applyFilters() {
+        filteredProducts = allProducts.filter(product => {
+            const productCategory = product.getAttribute('data-category');
+            const productPrice = parseFloat(product.getAttribute('data-price'));
+            const productName = product.querySelector('.detail-box h5').textContent.toLowerCase();
+            const productDesc = product.querySelector('.detail-box p').textContent.toLowerCase();
+            
+            // Kategori kontrolü
+            let categoryMatch = (selectedCategory === 'all' || productCategory === selectedCategory);
+            
+            // Fiyat kontrolü
+            let priceMatch = true;
+            if (selectedPrice === 'cheap') priceMatch = (productPrice < 150);
+            else if (selectedPrice === 'medium') priceMatch = (productPrice >= 150 && productPrice < 300);
+            else if (selectedPrice === 'expensive') priceMatch = (productPrice >= 300);
+            
+            // Arama kontrolü
+            let searchMatch = true;
+            if (searchText) {
+                searchMatch = productName.includes(searchText.toLowerCase()) || 
+                             productDesc.includes(searchText.toLowerCase());
+            }
+            
+            return categoryMatch && priceMatch && searchMatch;
+        });
+        
+        currentPage = 1; // Filtrelemede ilk sayfaya dön
+        displayCurrentPage();
+    }
+    
+    // ARAMA FONKSİYONU
+    function applySearchFilter() {
+        searchText = document.getElementById('searchBox').value.trim();
+        applyFilters();
+    }
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        // Tüm ürünleri array'e al
+        allProducts = Array.from(document.querySelectorAll('.grid > div[data-category]'));
+        
+        // İlk yüklemede "Tümü" filtresini uygula
+        applyFilters();
+        
+        // Arama kutusuna event listener
+        document.getElementById('searchBox').addEventListener('input', applySearchFilter);
+        
+        // Kategori butonları
+        const filterButtons = document.querySelectorAll('.filters_menu li');
         filterButtons.forEach(button => {
             button.addEventListener('click', function() {
-                console.log("Kategori butonuna tıklandı");
-                
-                const filterType = this.getAttribute('data-filter-type');
-                const filterValue = this.getAttribute('data-filter');
-                
-                // Kategori filtresinde aktif sınıfı değiştir
                 filterButtons.forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
                 
-                // Seçilen kategoriyi kaydet
-                if (filterType === 'category') {
-                    selectedCategory = filterValue;
-                }
-                
-                console.log("Seçilen kategori:", filterValue);
-                
-                // Filtreleri uygula
+                selectedCategory = this.getAttribute('data-filter');
                 applyFilters();
             });
         });
         
-        // Fiyat dropdown'ına change olayı
+        // Fiyat dropdown
         const priceFilter = document.getElementById('priceFilter');
-        console.log("Fiyat dropdown elementi:", priceFilter);
-        
         if (priceFilter) {
-            console.log("Dropdown bulundu, event listener ekleniyor...");
-            
-            priceFilter.addEventListener('change', function(e) {
-                console.log("Change event tetiklendi!");
-                console.log("Event:", e);
-                console.log("this.value:", this.value);
-                console.log("e.target.value:", e.target.value);
-                
+            priceFilter.addEventListener('change', function() {
                 selectedPrice = this.value;
-                console.log("Dropdown değişti! Seçilen fiyat aralığı:", selectedPrice);
-                
-                // Filtreleri uygula
                 applyFilters();
             });
-            
-            // Direkt onchange de deneyelim
-            priceFilter.onchange = function() {
-                console.log("onchange tetiklendi!");
-                selectedPrice = this.value;
-                console.log("Yeni seçim:", selectedPrice);
-                applyFilters();
-            };
-        } else {
-            console.error("Fiyat dropdown bulunamadı!");
         }
     });
 </script>

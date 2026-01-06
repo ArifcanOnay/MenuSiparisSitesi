@@ -8,6 +8,12 @@
 	int count = (Model.PageNumber - 1) * Model.PageSize;
 }
 
+@section Styles {
+	<!-- DataTables CSS -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap4.min.css">
+}
+
 <div class="content">
 	<div class="container-fluid">
 		<h4 class="page-title">�r�n ��lemleri</h4>
@@ -22,16 +28,16 @@
 						<div class="card-sub">
 							�r�n ile ilgili i�lemleri a�a��dan ger�ekle�tirebilirsiniz.
 						</div>
-						<table class="table mt-3">
+						<table id="productTable" class="table table-striped table-bordered mt-3">
 							<thead>
 								<tr>
 									<th scope="col">#</th>
-									<th scope="col">�r�n Ad�</th>
+									<th scope="col">Ürün Adı</th>
 									<th scope="col">Fiyat</th>
 									<th scope="col">Kategori</th>
 									<th scope="col">Durum</th>
 									<th scope="col">Sil</th>
-									<th scope="col">G�ncelle</th>
+									<th scope="col">Güncelle</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -41,45 +47,86 @@
 									<tr>
 										<th>@count</th>
 										<td>@item.ProductName</td>
-										<td>@item.Price</td>
+										<td>@item.Price₺</td>
 										<td>@item.CategoryName</td>
-										<td>@item.ProductStatus</td>
-										<td><a href="/Admin/Product/DeleteProduct/@item.ProductID" class="btn btn-outline-danger">Sil</a></td>
-										<td><a href="/Admin/Product/UpdateProduct/@item.ProductID" class="btn btn-outline-success">G�ncelle</a></td>
+										<td>
+											@if (item.ProductStatus)
+											{
+												<span class="badge badge-success">Aktif</span>
+											}
+											else
+											{
+												<span class="badge badge-danger">Pasif</span>
+											}
+										</td>
+										<td><a href="/Admin/Product/DeleteProduct/@item.ProductID" class="btn btn-outline-danger btn-sm">Sil</a></td>
+										<td><a href="/Admin/Product/UpdateProduct/@item.ProductID" class="btn btn-outline-success btn-sm">Güncelle</a></td>
 									</tr>
 								}
 							</tbody>
 						</table>						
-						<!-- Sayfalama Bilgisi -->
-						<div style="margin-top: 20px; margin-bottom: 20px;">
-							<p style="color: #666;">
-								<strong>Toplam @Model.TotalItemCount ürün</strong> - 
-								Sayfa @Model.PageNumber / @Model.PageCount
-								(@Model.PageSize ürün gösteriliyor)
-							</p>
-						</div>
 						
-						<!-- Sayfalama Butonları -->
-						<div style="margin-bottom: 20px;">
-							@Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions
-							{
-								LiElementClasses = new[] { "page-item" },
-								PageClasses = new[] { "page-link" },
-								UlElementClasses = new[] { "pagination" },
-								DisplayLinkToFirstPage = PagedListDisplayMode.Always,
-								DisplayLinkToLastPage = PagedListDisplayMode.Always,
-								DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-								DisplayLinkToNextPage = PagedListDisplayMode.Always,
-								LinkToPreviousPageFormat = "« Önceki",
-								LinkToNextPageFormat = "Sonraki »",
-								LinkToFirstPageFormat = "İlk",
-								LinkToLastPageFormat = "Son"
-							})
-						</div>
-												<a href="/Admin/Product/CreateProduct/" class="btn btn-outline-primary">Yeni �r�n Giri�i</a>
+						<a href="/Admin/Product/CreateProduct/" class="btn btn-outline-primary">Yeni Ürün Girişi</a>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+@section Scripts {
+	<!-- DataTables JS -->
+	<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap4.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+	<script>
+		$(document).ready(function() {
+			$('#productTable').DataTable({
+				"language": {
+					"url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/tr.json"
+				},
+				"pageLength": 10,
+				"lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Tümü"]],
+				"order": [[1, "asc"]],
+				"dom": 'Bfrtip',
+				"buttons": [
+					{
+						extend: 'copy',
+						text: 'Kopyala',
+						className: 'btn btn-info btn-sm'
+					},
+					{
+						extend: 'excel',
+						text: 'Excel',
+						className: 'btn btn-success btn-sm',
+						exportOptions: {
+							columns: [0, 1, 2, 3, 4]
+						}
+					},
+					{
+						extend: 'pdf',
+						text: 'PDF',
+						className: 'btn btn-danger btn-sm',
+						exportOptions: {
+							columns: [0, 1, 2, 3, 4]
+						}
+					},
+					{
+						extend: 'print',
+						text: 'Yazdır',
+						className: 'btn btn-warning btn-sm'
+					}
+				],
+				"responsive": true,
+				"autoWidth": false
+			});
+		});
+	</script>
+}
