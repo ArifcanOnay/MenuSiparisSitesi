@@ -284,7 +284,7 @@ MenuSiparisSitesi/
   
 =======
 - **Ferhan Çıbık** - [@ferhancibik](https://github.com/ferhancibik)
->>>>>>> cef8ffe (Frontend DeÄŸiÅŸiklikleri ve GeliÅŸtirmeler)
+>>>>>>> cef8ffe (Frontend Degisiklikleri ve Gelistirmeler)
 
 ---
 
