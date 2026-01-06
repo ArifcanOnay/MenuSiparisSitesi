@@ -1,0 +1,48 @@
+@model List<ResultAboutDto>
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="content">
+	<div class="container-fluid">
+		<h4 class="page-title">Ana Sayfa Hakkýmýzda Ýþlemleri</h4>
+		<div class="row">
+			<div class="col-md-12">
+
+				<div class="card">
+					<div class="card-header">
+						<div class="card-title">Hakkýmýzda Listesi</div>
+					</div>
+					<div class="card-body">
+						<div class="card-sub">
+							Hakkýmýzda alanýyla ilgili iþlemleri yapabilirsiniz. Tema bütünlüðü için sadece 1 tane hakkýmýzda alaný oluþturmayý unutmayýn.
+						</div>
+						<table class="table mt-3">
+							<thead>
+								<tr>
+									<th scope="col">Baþlýk</th>
+									<th scope="col">Açýklama</th>
+									<th scope="col">Sil</th>
+									<th scope="col">Güncelle</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model)
+								{
+									<tr>
+										<td>@item.Title</td>
+										<td>@item.Description</td>
+										<td><a href="/Admin/About/DeleteAbout/@item.AboutID" class="btn btn-outline-danger">Sil</a></td>
+										<td><a href="/Admin/About/UpdateAbout/@item.AboutID" class="btn btn-outline-success">Güncelle</a></td>
+									</tr>
+								}
+							</tbody>
+						</table>
+						<a href="/Admin/About/CreateAbout/" class="btn btn-outline-primary">Yeni Hakkýmda Yazýsý Giriþi</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

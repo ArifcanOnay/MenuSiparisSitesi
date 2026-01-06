@@ -6,6 +6,7 @@
 <!DOCTYPE html>
 <html>
 @await Component.InvokeAsync("_LayoutHeaderPartialComponent")
+@RenderSection("Styles", required: false)
 <body>
 	<div class="wrapper">
 		@await Component.InvokeAsync("_LayoutNavbarComponentPartial")
@@ -21,5 +22,6 @@
 		</div>
 	</div>
 	@await Component.InvokeAsync("_LayoutScriptComponentPartial")
+	@RenderSection("Scripts", required: false)
 </body>
 </html>

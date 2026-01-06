@@ -3,69 +3,32 @@
 <style>
     .filters_menu {
         display: flex;
-        flex-wrap: wrap;
         justify-content: center;
-        gap: 15px;
         list-style: none;
         padding: 0;
         margin-bottom: 40px;
     }
 
     .filters_menu li {
-        background: #f8f9fa;
+        background: #ffbe33;
         border: 2px solid #ffbe33;
         padding: 12px 30px;
         border-radius: 30px;
-        cursor: pointer;
         font-weight: 600;
-        transition: all 0.3s ease;
-        color: #222831;
+        color: white;
         font-size: 16px;
-    }
-
-    .filters_menu li:hover {
-        background: #ffbe33;
-        color: white;
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(255, 190, 51, 0.3);
-    }
-
-    .filters_menu li.active {
-        background: #ffbe33;
-        color: white;
         box-shadow: 0 5px 15px rgba(255, 190, 51, 0.4);
     }
 
     .category-icon {
         margin-right: 8px;
+        font-size: 18px;
     }
 </style>
 
 <ul class="filters_menu">
-    <li class="active" data-filter="all">
+    <li>
         <span class="category-icon">🍽️</span>
         Tüm Ürünler
     </li>
-
-    @foreach (var item in Model)
-    {
-        var icon = item.CategoryName switch
-        {
-            "Hamburger" => "🍔",
-            "Pizza" => "🍕",
-            "Tatlı" => "🍰",
-            "Tatlılar" => "🍰",
-            "İçecek" => "🥤",
-            "İçecekler" => "🥤",
-            "Salata" => "🥗",
-            "Makarna" => "🍝",
-            "Başlangıç" => "🍴",
-            _ => "🍴"
-        };
-        
-        <li data-filter="@item.CategoryName" data-category-id="@item.CategoryID">
-            <span class="category-icon">@icon</span>
-            @item.CategoryName
-        </li>
-    }
 </ul>

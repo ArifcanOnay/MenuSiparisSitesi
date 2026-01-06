@@ -13,12 +13,14 @@ namespace SignalRApi.Controllers
     {
         private readonly IOrderService _orderService;
         private readonly IBasketService _basketService;
+        private readonly IMenuTableService _menuTableService;
         private readonly IHubContext<SignalRHub> _hubContext;
 
-        public OrdersController(IOrderService orderService, IBasketService basketService, IHubContext<SignalRHub> hubContext)
+        public OrdersController(IOrderService orderService, IBasketService basketService, IMenuTableService menuTableService, IHubContext<SignalRHub> hubContext)
         {
             _orderService = orderService;
             _basketService = basketService;
+            _menuTableService = menuTableService;
             _hubContext = hubContext;
         }
 
@@ -91,12 +93,16 @@ namespace SignalRApi.Controllers
             var order = new Order
             {
                 TableNumber = "Masa " + menuTableId,
+                MenuTableID = menuTableId,
                 Description = "Sipariş Alındı",
                 OrderDate = DateTime.Now,
                 TotalPrice = totalPrice
             };
 
             _orderService.TAdd(order);
+
+            // Masayı dolu yap
+            _menuTableService.TChangeMenuTableStatusToTrue(menuTableId);
 
             // Sepeti temizle
             foreach (var item in basketItems)

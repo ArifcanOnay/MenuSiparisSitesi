@@ -6,6 +6,7 @@ using SignalRWebUI.Dtos.IdentityDtos;
 
 namespace SignalRWebUI.Controllers
 {
+    [Route("[controller]")]
     public class SettingController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
@@ -17,6 +18,7 @@ namespace SignalRWebUI.Controllers
 
         // Admin için (mevcut)
         [HttpGet]
+        [Route("Index")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
@@ -30,6 +32,7 @@ namespace SignalRWebUI.Controllers
         }
         
         [HttpPost]
+        [Route("Index")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(UserEditDto userEditDto)
         {
@@ -49,6 +52,7 @@ namespace SignalRWebUI.Controllers
 
         // Kullanıcılar için (YENİ)
         [HttpGet]
+        [Route("UserProfile")]
         [Authorize]
         public async Task<IActionResult> UserProfile()
         {
@@ -70,6 +74,7 @@ namespace SignalRWebUI.Controllers
         }
 
         [HttpPost]
+        [Route("UserProfile")]
         [Authorize]
         public async Task<IActionResult> UserProfile(UserEditDto userEditDto)
         {

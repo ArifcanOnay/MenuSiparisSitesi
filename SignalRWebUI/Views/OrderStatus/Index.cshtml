@@ -1,10 +1,19 @@
 @model SignalRWebUI.Dtos.OrderDtos.ResultOrderDto
 @{
     ViewData["Title"] = "Sipariş Durumu";
-    Layout = "~/Views/UILayout/Index.cshtml";
+    Layout = null;
 }
 
-<section class="vh-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+<!DOCTYPE html>
+<html>
+
+@await Component.InvokeAsync("_UILayoutHeadComponentPartial")
+
+<body class="sub_page">
+
+@await Component.InvokeAsync("_MenuNavbarComponentPartial")
+
+<section class="vh-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding-top: 120px;">
     <div class="container h-100">
         <div class="row h-100 justify-content-center align-items-center">
             <div class="col-lg-8">
@@ -68,8 +77,16 @@
                                         </div>
                                         <h3 class="mt-4 status-text" style="color: #00f2fe;">Sipariş Tamamlandı!</h3>
                                         <p class="text-muted">Siparişiniz hazır, afiyet olsun!</p>
-                                        <div class="alert alert-success mt-3" role="alert">
-                                            <i class="fas fa-smile"></i> Siparişiniz masanıza getiriliyor!
+                                        <div class="alert alert-success mt-3" role="alert" style="font-size: 18px; padding: 20px;">
+                                            <i class="fas fa-smile fa-2x mb-3"></i>
+                                            <p style="margin: 0;"><strong>Siparişiniz masanıza getiriliyor!</strong></p>
+                                            <hr style="border-color: rgba(255,255,255,0.3); margin: 15px 0;">
+                                            <p style="font-size: 16px; margin: 10px 0;">
+                                                <span id="countdown">10</span> saniye içinde anasayfaya yönlendirileceksiniz...
+                                            </p>
+                                            <div class="progress" style="height: 5px; margin-top: 15px;">
+                                                <div id="progressBar" class="progress-bar bg-white" role="progressbar" style="width: 100%; transition: width 1s linear;"></div>
+                                            </div>
                                         </div>
                                     }
                                     else
@@ -108,8 +125,11 @@
                             </div>
 
                             <div class="text-center mt-4">
-                                <a href="/Menu/Index?id=@ViewBag.MenuTableId" class="btn btn-primary btn-lg">
+                                <a href="/Menu/Index/@ViewBag.MenuTableId" class="btn btn-primary btn-lg">
                                     <i class="fas fa-arrow-left"></i> Menüye Dön
+                                </a>
+                                <a href="/Baskets/Index/@ViewBag.MenuTableId" class="btn btn-warning btn-lg">
+                                    <i class="fas fa-shopping-cart"></i> Sepete Git
                                 </a>
                                 <button onclick="location.reload()" class="btn btn-outline-primary btn-lg">
                                     <i class="fas fa-sync"></i> Yenile
@@ -122,7 +142,7 @@
                                 <i class="fas fa-inbox fa-5x text-muted mb-4"></i>
                                 <h4>Henüz bir siparişiniz bulunmamaktadır.</h4>
                                 <p class="text-muted">Menüden ürün seçerek sipariş verebilirsiniz.</p>
-                                <a href="/Menu/Index?id=@ViewBag.MenuTableId" class="btn btn-primary btn-lg mt-3">
+                                <a href="/Menu/Index/@ViewBag.MenuTableId" class="btn btn-primary btn-lg mt-3">
                                     <i class="fas fa-utensils"></i> Menüye Git
                                 </a>
                             </div>
@@ -244,6 +264,24 @@
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
 <script>
+    @if (Model != null && Model.Description == "Sipariş Tamamlandı")
+    {
+        @:var countdown = 10;
+        @:var countdownElement = document.getElementById('countdown');
+        @:var progressBar = document.getElementById('progressBar');
+        @:
+        @:var countdownInterval = setInterval(function() {
+            @:countdown--;
+            @:countdownElement.textContent = countdown;
+            @:progressBar.style.width = (countdown * 10) + '%';
+            @:
+            @:if (countdown <= 0) {
+                @:clearInterval(countdownInterval);
+                @:window.location.href = '/Default/Index';
+            @:}
+        @:}, 1000);
+    }
+
     // SignalR bağlantısı kur
     var connection = new signalR.HubConnectionBuilder()
         .withUrl("https://localhost:7186/signalrhub")
@@ -251,9 +289,17 @@
 
     // Sipariş durumu güncellemelerini dinle
     connection.on("ReceiveOrderStatus", function (tableNumber, status) {
-        if (tableNumber === "@ViewBag.TableNumber") {
-            // Sayfayı yenile
-            location.reload();
+        var currentTable = "Masa @ViewBag.MenuTableId";
+        if (tableNumber === currentTable) {
+            // Eğer sipariş tamamlandıysa reload yapma, sayaç çalışsın
+            if (status !== "Sipariş Tamamlandı") {
+                location.reload();
+            } else {
+                // Sipariş tamamlandı, sayaç başlat
+                if (!document.getElementById('countdown')) {
+                    location.reload(); // Sayaç yoksa sayfayı yenile ki sayaç görünsün
+                }
+            }
         }
     });
 
@@ -262,8 +308,18 @@
         console.error(err.toString());
     });
 
-    // Otomatik yenileme (30 saniyede bir)
-    setInterval(function() {
-        location.reload();
+    // Otomatik yenileme - sadece sipariş tamamlanmadıysa
+    @if (Model == null || Model.Description != "Sipariş Tamamlandı")
+    {
+        @:setInterval(function() {
+            @:location.reload();
+        @:}, 30000);
+    }
+</script>
     }, 30000);
 </script>
+
+@await Component.InvokeAsync("_UILayoutFooterComponentPartial")
+
+</body>
+</html>

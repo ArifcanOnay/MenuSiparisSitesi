@@ -46,13 +46,14 @@ namespace SignalRApi.Controllers
 		{
 			//Bahçe 01 --> 45
 			using var context = new SignalRContext();
+			var productPrice = context.Products.Where(x => x.ProductID == createBasketDto.ProductID).Select(y => y.Price).FirstOrDefault();
 			_basketService.TAdd(new Basket()
 			{
 				ProductID = createBasketDto.ProductID,
 				MenuTableID = createBasketDto.MenuTableID,
 				Count = 1,
-				Price = context.Products.Where(x => x.ProductID == createBasketDto.ProductID).Select(y => y.Price).FirstOrDefault(),
-				TotalPrice = createBasketDto.TotalPrice,
+				Price = productPrice,
+				TotalPrice = productPrice * 1,
 			});
 			return Ok();
 		}

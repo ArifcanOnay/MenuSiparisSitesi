@@ -1,0 +1,180 @@
+@model List<SignalRWebUI.Dtos.OrderDtos.ResultOrderDto>
+@{
+    ViewData["Title"] = "Sipariş Yönetimi";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <!-- Başarı/Hata Mesajları -->
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong><i class="material-icons">check_circle</i></strong> @TempData["SuccessMessage"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong><i class="material-icons">error</i></strong> @TempData["ErrorMessage"]
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title">Sipariş Yönetimi</h4>
+                        <p class="card-category">Tüm siparişleri görüntüleyin ve durumlarını güncelleyin</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead class="text-primary">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Masa</th>
+                                        <th>Tarih</th>
+                                        <th>Toplam Tutar</th>
+                                        <th>Durum</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.OrderID</td>
+                                            <td><strong>@item.TableNumber</strong></td>
+                                            <td>@item.OrderDate.ToString("dd.MM.yyyy HH:mm")</td>
+                                            <td><strong>@item.TotalPrice.ToString("C2")</strong></td>
+                                            <td>
+                                                @if (item.Description == "Sipariş Alındı")
+                                                {
+                                                    <span class="badge badge-info">@item.Description</span>
+                                                }
+                                                else if (item.Description == "Sipariş Hazırlanıyor")
+                                                {
+                                                    <span class="badge badge-warning">@item.Description</span>
+                                                }
+                                                else if (item.Description == "Sipariş Tamamlandı")
+                                                {
+                                                    <span class="badge badge-success">@item.Description</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-secondary">@item.Description</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.Description == "Sipariş Alındı")
+                                                {
+                                                    <a href="/Admin/OrderManagement/SetOrderPreparing?orderId=@item.OrderID&menuTableId=@item.MenuTableID" class="btn btn-warning btn-sm">
+                                                        <i class="material-icons">restaurant</i> Hazırlanıyor
+                                                    </a>
+                                                }
+                                                @if (item.Description == "Sipariş Hazırlanıyor")
+                                                {
+                                                    <a href="/Admin/OrderManagement/SetOrderCompleted?orderId=@item.OrderID&menuTableId=@item.MenuTableID" class="btn btn-success btn-sm">
+                                                        <i class="material-icons">check_circle</i> Tamamlandı
+                                                    </a>
+                                                }
+                                                @if (item.Description == "Sipariş Tamamlandı")
+                                                {
+                                                    <span class="text-success"><i class="material-icons">done_all</i> Tamamlandı</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <script>
+        $(document).ready(function() {
+            $.notify({
+                icon: "notifications",
+                message: "@TempData["SuccessMessage"]"
+            }, {
+                type: 'success',
+                timer: 3000,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                }
+            });
+        });
+    </script>
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+<script>
+    // SignalR bağlantısı
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7186/signalrhub")
+        .build();
+
+    connection.start().then(function () {
+        console.log("SignalR bağlantısı kuruldu!");
+    }).catch(function (err) {
+        console.error(err.toString());
+    });
+
+    // Sipariş durumu güncellendiğinde bildirim göster
+    connection.on("ReceiveOrderStatus", function (tableNumber, status) {
+        $.notify({
+            icon: "notifications",
+            message: tableNumber + " - " + status
+        }, {
+            type: 'info',
+            timer: 4000,
+            placement: {
+                from: 'top',
+                align: 'right'
+            }
+        });
+        
+        // Sayfayı yenile
+        setTimeout(function() {
+            location.reload();
+        }, 1000);
+    });
+</script>
+
+<style>
+    .badge {
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+    .badge-info {
+        background-color: #00bcd4;
+        color: white;
+    }
+    .badge-warning {
+        background-color: #ff9800;
+        color: white;
+    }
+    .badge-success {
+        background-color: #4caf50;
+        color: white;
+    }
+    .badge-secondary {
+        background-color: #9e9e9e;
+        color: white;
+    }
+</style>

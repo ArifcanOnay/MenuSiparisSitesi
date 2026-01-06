@@ -1,0 +1,406 @@
+﻿@model List<ResultProductDto>
+<section class="food_section layout_padding-bottom" style="padding-bottom: 200px; margin-bottom: 100px;">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>
+                Öne Çıkan Ürünlerimiz
+            </h2>
+            <p style="margin-top: 15px; color: #666; font-size: 16px;">
+                Kategori seçerek ürünlerimizi filtreleyebilirsiniz
+            </p>
+        </div>
+
+        <style>
+            .filters_menu {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+                list-style: none;
+                padding: 0;
+                margin-bottom: 40px;
+            }
+
+            .filters_menu li {
+                background: #f8f9fa;
+                border: 2px solid #ffbe33;
+                padding: 12px 30px;
+                border-radius: 30px;
+                cursor: pointer;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                color: #222831;
+                font-size: 16px;
+            }
+
+            .filters_menu li:hover {
+                background: #ffbe33;
+                color: white;
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(255, 190, 51, 0.3);
+            }
+
+            .filters_menu li.active {
+                background: #ffbe33;
+                color: white;
+                box-shadow: 0 5px 15px rgba(255, 190, 51, 0.4);
+            }
+
+            .category-icon {
+                margin-right: 8px;
+            }
+
+            .food_section .box {
+                transition: all 0.3s ease;
+                border-radius: 15px;
+                overflow: hidden;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+
+            .food_section .box:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 10px 30px rgba(255, 190, 51, 0.3);
+            }
+
+            .food_section .img-box {
+                overflow: hidden;
+                border-radius: 15px 15px 0 0;
+            }
+
+            .food_section .img-box img {
+                transition: transform 0.3s ease;
+            }
+
+            .food_section .box:hover .img-box img {
+                transform: scale(1.1);
+            }
+            
+            .filters-content {
+                min-height: 400px;
+                padding: 20px 0 120px 0;
+                margin-bottom: 100px;
+            }
+            
+            .grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 30px !important;
+                margin-bottom: 100px;
+                padding: 0 15px;
+                width: 100%;
+            }
+            
+            @@media (max-width: 992px) {
+                .grid {
+                    grid-template-columns: repeat(2, 1fr) !important;
+                }
+            }
+            
+            @@media (max-width: 576px) {
+                .grid {
+                    grid-template-columns: 1fr !important;
+                }
+            }
+            
+            .grid > div[data-category] {
+                width: 100% !important;
+                margin-bottom: 0 !important;
+                display: block !important;
+            }
+            
+            .btn-box {
+                margin-top: 80px;
+                margin-bottom: 80px;
+            }
+            
+            @@media (max-width: 992px) {
+                .grid > div[data-category] {
+                    flex: 0 0 calc(50% - 15px);
+                    max-width: calc(50% - 15px);
+                }
+            }
+            
+            @@media (max-width: 576px) {
+                .grid > div[data-category] {
+                    flex: 0 0 100%;
+                    max-width: 100%;
+                }
+            }
+        </style>
+
+        <ul class="filters_menu">
+            <li class="active" data-filter="all">
+                <span class="category-icon">🍽️</span>
+                Tümü
+            </li>
+            @{
+                var categories = Model.Select(x => x.CategoryName).Distinct().ToList();
+                foreach (var category in categories)
+                {
+                    var icon = category switch
+                    {
+                        "Hamburger" => "🍔",
+                        "Pizza" => "🍕",
+                        "Tatlı" => "🍰",
+                        "Tatlılar" => "🍰",
+                        "İçecek" => "🥤",
+                        "İçecekler" => "🥤",
+                        "Salata" => "🥗",
+                        "Makarna" => "🍝",
+                        "Başlangıç" => "🍴",
+                        _ => "🍴"
+                    };
+                    <li data-filter="@category">
+                        <span class="category-icon">@icon</span>
+                        @category
+                    </li>
+                }
+            }
+        </ul>
+
+        <div class="filters-content">
+            <div class="grid">
+                @foreach(var item in Model)
+                {
+                <div data-category="@item.CategoryName" class="@item.CategoryName">
+                    <div class="box">
+                        <div>
+                            <div class="img-box">
+                                <img src="@item.ImageUrl" alt="">
+                            </div>
+                            <div class="detail-box">
+                                <h5>
+                                    @item.ProductName
+                                </h5>
+                                <p>
+                                    @item.Description
+                                </p>
+                                <div class="options">
+                                    <h6>
+                                        @item.Price₺
+                                    </h6>
+                                    @if (ViewBag.MenuTableId != null && ViewBag.MenuTableId > 0)
+                                    {
+                                        <a href="#" onclick="addToBasket(@item.ProductID, @ViewBag.MenuTableId); return false;" title="Sepete Ekle">
+                                            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                                            <g>
+                                            <g>
+                                            <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
+                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
+                          </g>
+                        </g>
+                                            <g>
+                                            <g>
+                                            <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
+                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
+                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
+                         C457.728,97.71,450.56,86.958,439.296,84.91z" />
+                          </g>
+                        </g>
+                                            <g>
+                                            <g>
+                                            <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
+                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
+                          </g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                      </svg>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="/CustomerTable/CustomerTableList/" title="Sipariş vermek için masa seçin">
+                                            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                                            <g>
+                                            <g>
+                                            <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
+                         c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
+                          </g>
+                        </g>
+                                            <g>
+                                            <g>
+                                            <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
+                         C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
+                         c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
+                         C457.728,97.71,450.56,86.958,439.296,84.91z" />
+                          </g>
+                        </g>
+                                            <g>
+                                            <g>
+                                            <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
+                         c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
+                          </g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                                            <g>
+                        </g>
+                      </svg>
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+        
+        <!-- Tüm Menüyü Gör Butonu -->
+        <div class="btn-box" style="text-align: center; margin-top: 40px; margin-bottom: 20px;">
+            <a href="/Menu/Index/" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 12px 40px; border-radius: 30px; color: white; text-decoration: none; font-weight: bold; box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);">
+                📋 Tüm Menüyü Gör
+            </a>
+        </div>
+        
+        @if (ViewBag.MenuTableId != null && ViewBag.MenuTableId > 0)
+        {
+            <div class="btn-box">
+                <a href="/Baskets/Index/@ViewBag.MenuTableId">
+                    🛒 Sepetime Git
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="btn-box">
+                <a href="/CustomerTable/CustomerTableList/">
+                    Sipariş Vermek İçin Masa Seçin
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<script>
+    function addToBasket(productId, menuTableId) {
+        if (!productId || !menuTableId) {
+            alert('Hata: Ürün veya masa bilgisi eksik!');
+            return false;
+        }
+        
+        // Form oluştur ve gönder
+        var form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/Menu/AddBasket';
+        
+        var productInput = document.createElement('input');
+        productInput.type = 'hidden';
+        productInput.name = 'id';
+        productInput.value = productId;
+        form.appendChild(productInput);
+        
+        var tableInput = document.createElement('input');
+        tableInput.type = 'hidden';
+        tableInput.name = 'menuTableId';
+        tableInput.value = menuTableId;
+        form.appendChild(tableInput);
+        
+        document.body.appendChild(form);
+        form.submit();
+        
+        return false;
+    }
+    
+    // Kategori Filtreleme (Vanilla JavaScript - jQuery'siz)
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("Filtreleme başlatıldı");
+        
+        // Tüm ürünleri al
+        const allProducts = document.querySelectorAll('.grid > div[data-category]');
+        
+        // İlk yüklemede sadece ilk 6 ürünü göster
+        allProducts.forEach((product, index) => {
+            if (index < 6) {
+                product.style.cssText = 'display: block !important;';
+            } else {
+                product.style.cssText = 'display: none !important;';
+            }
+            console.log("Ürün " + index + " kategorisi:", product.getAttribute('data-category'));
+        });
+        
+        // Kategori butonlarına tıklama olayı
+        const filterButtons = document.querySelectorAll('.filters_menu li');
+        console.log("Bulunan buton sayısı:", filterButtons.length);
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                console.log("Butona tıklandı");
+                
+                // Aktif sınıfı değiştir
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+
+                // Filtreleme değerini al
+                const filterValue = this.getAttribute('data-filter');
+                console.log("Seçilen kategori:", filterValue);
+
+                const products = document.querySelectorAll('.grid > div[data-category]');
+                console.log("Toplam ürün sayısı:", products.length);
+                
+                if (filterValue === 'Tüm Ürünler') {
+                    // "Tümü" basınca sadece ilk 6 ürünü göster
+                    console.log("Tüm ürünlerden ilk 6'sı gösteriliyor");
+                    products.forEach((product, index) => {
+                        if (index < 6) {
+                            product.style.cssText = 'display: block !important;';
+                        } else {
+                            product.style.cssText = 'display: none !important;';
+                        }
+                    });
+                } else {
+                    // Filtreleme yap - o kategoriden TÜM ürünleri göster
+                    let foundCount = 0;
+                    products.forEach(product => {
+                        const productCategory = product.getAttribute('data-category');
+                        console.log("Kontrol edilen ürün:", productCategory, "Aranan:", filterValue);
+                        
+                        if (productCategory === filterValue) {
+                            product.style.cssText = 'display: block !important;';
+                            foundCount++;
+                        } else {
+                            product.style.cssText = 'display: none !important;';
+                        }
+                    });
+                    console.log("Bulunan ürün sayısı:", foundCount);
+                }
+            });
+        });
+    });
+</script>

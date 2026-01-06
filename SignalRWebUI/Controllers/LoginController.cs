@@ -37,7 +37,7 @@ namespace SignalRWebUI.Controllers
 					// Eğer Admin rolü varsa admin paneline yönlendir
 					if (roles.Contains("Admin"))
 					{
-						return RedirectToAction("Index", "Category");
+						return RedirectToAction("Index", "Category", new { area = "Admin" });
 					}
 				}
 				// Normal kullanıcı - masa seçim sayfasına yönlendir

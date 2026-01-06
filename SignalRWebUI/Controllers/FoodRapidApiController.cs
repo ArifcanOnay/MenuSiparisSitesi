@@ -12,7 +12,7 @@ namespace SignalRWebUI.Controllers
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri("https://tasty.p.rapidapi.com/recipes/list?from=0&size=60&tags=under_30_minutes"),
+                RequestUri = new Uri("https://tasty.p.rapidapi.com/recipes/list?from=0&size=5&tags=under_30_minutes"),
                 Headers =
     {
         { "x-rapidapi-key", "630ce9cc86msh271c60cffe62d5ep1b514djsn0fe292593744" },

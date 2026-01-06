@@ -137,6 +137,9 @@
                                 <h5><span id="totalpricewithkdv">@basketTotalPriceWithTax.ToString("0.00")</span>₺</h5>
                             </div>
                             <br />
+                            <a href="/OrderStatus/Index?menuTableId=@ViewBag.id" class="btn btn-block btn-info font-weight-bold my-3 py-3">
+                                <i class="fa fa-receipt"></i> Sipariş Durumu
+                            </a>
                             <a href="/Baskets/CompleteOrder?menuTableId=@ViewBag.id" class="btn btn-block btn-success font-weight-bold my-3 py-3">
                                 <i class="fa fa-check-circle"></i> Siparişi Tamamla
                             </a>

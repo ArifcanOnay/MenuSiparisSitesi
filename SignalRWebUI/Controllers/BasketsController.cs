@@ -58,10 +58,10 @@ namespace SignalRWebUI.Controllers
             
             if (responseMessage.IsSuccessStatusCode)
             {
-                TempData["SuccessMessage"] = "✅ Siparişiniz başarıyla alındı! Durumunu takip edebilirsiniz.";
+                TempData["SuccessMessage"] = "✅ Siparişiniz başarıyla alındı! Mutfağa iletildi.";
                 
-                // Sipariş durumu sayfasına yönlendir
-                return RedirectToAction("Index", "OrderStatus", new { menuTableId = menuTableId });
+                // Menu sayfasına geri dön
+                return RedirectToAction("Index", "Menu", new { id = menuTableId });
             }
             
             TempData["ErrorMessage"] = "❌ Sipariş oluşturulurken bir hata oluştu!";

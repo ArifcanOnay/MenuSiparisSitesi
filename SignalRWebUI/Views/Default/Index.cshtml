@@ -7,10 +7,37 @@
 
 @await Component.InvokeAsync("_DefaultOfferComponentPartial")
 
+<!-- Custom HTML Helper Örneği -->
+<div class="container" style="margin: 40px auto;">
+    @Html.InfoCard("Hoş Geldiniz!", "MyRestoran'a özel olarak hazırlanmış menümüzü keşfedin. QR kod ile temassız sipariş verin!", "fa fa-utensils")
+</div>
+
+<!-- Custom Tag Helper Örnekleri -->
+<div class="container" style="margin: 40px auto;">
+    <h2 style="text-align: center; margin-bottom: 30px; color: #333;">✨ Öne Çıkan Özelliklerimiz</h2>
+    
+    <feature-highlight 
+        title="Online Rezervasyon" 
+        description="Rezervasyon yaptığınızda mail hesabınıza otomatik onay bildirimi gönderilir!" 
+        icon="fa-calendar-check"
+        color="#667eea">
+    </feature-highlight>
+    
+    <feature-highlight 
+        title="Anlık Bildirimler" 
+        description="Siparişinizin durumunu gerçek zamanlı olarak takip edin!" 
+        icon="fa-bell"
+        color="#f093fb">
+    </feature-highlight>
+    
+    <feature-highlight 
+        title="Tarif İzleme" 
+        description="Lezzetli yemek tariflerini video ile izleyin ve öğrenin!" 
+        icon="fa-video"
+        color="#4facfe">
+    </feature-highlight>
+</div>
+
 @await Component.InvokeAsync("_DefaultOurMenuComponentPartial")
 
 @await Component.InvokeAsync("_DefaultAboutComponentPartial")
-
-@await Html.PartialAsync("SendMessage.cshtml")
-
-@await Component.InvokeAsync("_DefaultTestimonialComponentPartial")

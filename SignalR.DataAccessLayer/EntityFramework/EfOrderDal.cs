@@ -60,7 +60,10 @@ namespace SignalR.DataAccessLayer.EntityFramework
         public Order GetLastOrderByTableNumber(string tableNumber)
         {
             using var context = new SignalRContext();
-            return context.Orders.Where(x => x.TableNumber == tableNumber).OrderByDescending(x => x.OrderID).FirstOrDefault();
+            return context.Orders
+                .Where(x => x.TableNumber == tableNumber)
+                .OrderByDescending(x => x.OrderID)
+                .FirstOrDefault();
         }
     }
 }

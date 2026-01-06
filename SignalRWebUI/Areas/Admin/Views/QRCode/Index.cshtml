@@ -1,0 +1,60 @@
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <h4 class="page-title">QR Kod Ýþlemleri</h4>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Masa QR Kodu Oluþtur</h4>
+                        <p class="card-category">Müþterilerinizin masadan sipariþ verebilmesi için QR kod oluþturun</p>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" asp-action="Index" asp-area="Admin" asp-controller="QRCode">
+                            <div class="form-group">
+                                <label>Masa Numarasý veya URL Giriniz:</label>
+                                <input type="text" name="value" class="form-control" placeholder="Örnek: https://localhost:7092/Menu/Index/1 veya Masa 1" />
+                                <small class="form-text text-muted">
+                                    ?? Örnek URL: https://localhost:7092/Menu/Index/1 (Masa 1 için menü)
+                                </small>
+                            </div>
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="fa fa-qrcode"></i> QR Kod Oluþtur
+                            </button>
+                        </form>
+                        
+                        @if (ViewBag.QrCodeImage != null)
+                        {
+                            <hr />
+                            <div class="text-center">
+                                <h5>? QR Kod Baþarýyla Oluþturuldu!</h5>
+                                <img src="@ViewBag.QrCodeImage" alt="QR Code" style="width:400px;height:400px;border:3px solid #ffbe33;border-radius:15px;padding:10px;" />
+                                <p class="mt-3">Bu QR kodu yazdýrýp masanýza yerleþtirebilirsiniz.</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h4 class="card-title">?? Nasýl Kullanýlýr?</h4>
+                    </div>
+                    <div class="card-body">
+                        <ol style="font-size:16px;line-height:2;">
+                            <li><strong>Masa URL'i Oluþtur:</strong> Örnek: https://localhost:7092/Menu/Index/1 (1 = Masa ID)</li>
+                            <li><strong>QR Kod Oluþtur:</strong> Yukarýdaki forma URL'i yapýþtýr ve "QR Kod Oluþtur" butonuna bas</li>
+                            <li><strong>Yazdýr:</strong> Oluþan QR kodu sað týk › "Resmi Kaydet" › Yazdýr</li>
+                            <li><strong>Masaya Yerleþtir:</strong> QR kodu lamine edip masaya koy</li>
+                            <li><strong>Müþteri Tarar:</strong> Müþteri telefonu ile QR'ý tarayýnca direkt menü açýlýr ve sipariþ verebilir!</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
